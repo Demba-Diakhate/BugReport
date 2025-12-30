@@ -2,6 +2,111 @@
     if (window.FeedbackWidget) return;
 
     const BUTTON_ID = 'feedback-widget-button';
+    let inspecting = false;
+    let hoveredElement = null;
+
+    /* ===========================
+       UTILS
+    ============================ */
+
+    function highlight(el) {
+        if (!el) return;
+        el.__fwOldOutline = el.style.outline;
+        el.style.outline = '2px solid red';
+        el.style.cursor = 'crosshair';
+    }
+
+    function unhighlight(el) {
+        if (!el) return;
+        el.style.outline = el.__fwOldOutline || '';
+        el.style.cursor = '';
+    }
+
+    function stopEvent(e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+
+    function getSelector(el) {
+        if (el.id) return `#${el.id}`;
+        let path = [];
+        while (el && el.nodeType === 1 && el !== document.body) {
+            let selector = el.tagName.toLowerCase();
+            if (el.className) {
+                selector += '.' + el.className.trim().split(/\s+/).join('.');
+            }
+            path.unshift(selector);
+            el = el.parentElement;
+        }
+        return path.join(' > ');
+    }
+
+    /* ===========================
+       INSPECTION MODE
+    ============================ */
+
+    function onMouseOver(e) {
+        stopEvent(e);
+        if (hoveredElement) unhighlight(hoveredElement);
+        hoveredElement = e.target;
+        highlight(hoveredElement);
+    }
+
+    function onMouseOut(e) {
+        stopEvent(e);
+        unhighlight(e.target);
+    }
+
+    function onClick(e) {
+        stopEvent(e);
+        const element = e.target;
+        exitInspection();
+
+        const selector = getSelector(element);
+        console.log('[FeedbackWidget] element selected:', selector);
+
+        alert('Élément sélectionné :\n' + selector);
+    }
+
+    function onKeyDown(e) {
+        if (e.key === 'Escape') {
+            exitInspection();
+        }
+    }
+
+    function enterInspection() {
+        if (inspecting) return;
+        inspecting = true;
+
+        document.body.style.cursor = 'crosshair';
+
+        document.addEventListener('mouseover', onMouseOver, true);
+        document.addEventListener('mouseout', onMouseOut, true);
+        document.addEventListener('click', onClick, true);
+        document.addEventListener('keydown', onKeyDown, true);
+
+        console.log('[FeedbackWidget] inspection started');
+    }
+
+    function exitInspection() {
+        inspecting = false;
+
+        if (hoveredElement) unhighlight(hoveredElement);
+        hoveredElement = null;
+
+        document.body.style.cursor = '';
+
+        document.removeEventListener('mouseover', onMouseOver, true);
+        document.removeEventListener('mouseout', onMouseOut, true);
+        document.removeEventListener('click', onClick, true);
+        document.removeEventListener('keydown', onKeyDown, true);
+
+        console.log('[FeedbackWidget] inspection stopped');
+    }
+
+    /* ===========================
+       BUTTON
+    ============================ */
 
     function createButton() {
         if (document.getElementById(BUTTON_ID)) return;
@@ -10,7 +115,6 @@
         btn.id = BUTTON_ID;
         btn.innerText = 'Signaler un bug';
 
-        // Styles isolés
         btn.style.position = 'fixed';
         btn.style.bottom = '20px';
         btn.style.right = '20px';
@@ -25,20 +129,14 @@
         btn.style.fontFamily = 'Arial, sans-serif';
         btn.style.boxShadow = '0 4px 10px rgba(0,0,0,.2)';
 
-        btn.addEventListener('mouseenter', () => {
-            btn.style.opacity = '0.9';
-        });
-
-        btn.addEventListener('mouseleave', () => {
-            btn.style.opacity = '1';
-        });
-
-        btn.addEventListener('click', () => {
-            console.log('[FeedbackWidget] button clicked');
-        });
+        btn.addEventListener('click', enterInspection);
 
         document.body.appendChild(btn);
     }
+
+    /* ===========================
+       INIT
+    ============================ */
 
     function init() {
         if (document.readyState === 'loading') {
@@ -46,13 +144,10 @@
         } else {
             createButton();
         }
-
-        console.log('[FeedbackWidget] initialized');
+        console.log('[FeedbackWidget] loaded');
     }
 
-    window.FeedbackWidget = {
-        init
-    };
+    window.FeedbackWidget = { init };
 
     init();
 })();

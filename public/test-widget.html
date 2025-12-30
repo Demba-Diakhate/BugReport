@@ -1,16 +1,151 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Test Widget</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+
+        header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.2em;
+        }
+
+        nav {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 10px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            padding: 5px 10px;
+        }
+
+        nav a:hover {
+            background-color: #45a049;
+            border-radius: 5px;
+        }
+
+        section {
+            padding: 60px 20px;
+            text-align: center;
+        }
+
+        section h2 {
+            color: #4CAF50;
+            margin-bottom: 20px;
+        }
+
+        section p {
+            max-width: 600px;
+            margin: auto;
+            font-size: 18px;
+            line-height: 1.6;
+        }
+
+        .buttons {
+            margin-top: 30px;
+        }
+
+        .buttons a {
+            display: inline-block;
+            text-decoration: none;
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 25px;
+            margin: 5px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .buttons a:hover {
+            background-color: #45a049;
+        }
+
+        footer {
+            background-color: #333;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+        }
+
+        footer a {
+            color: #4CAF50;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
 
-<h1>Page test client</h1>
+    <header>
+        <h1>Page test client</h1>
+        <nav>
+            <a href="#section1">Accueil</a>
+            <a href="#section2">Fonctionnalités</a>
+            <a href="#section3">Contact</a>
+        </nav>
+    </header>
 
-<script src="/feedback-widget.js"></script>
-<script>
-    FeedbackWidget.init();
-</script>
+    <section id="section1">
+        <h2>Bienvenue !</h2>
+        <p>Cette landing page simple est un exemple fonctionnel avec des liens de redirection internes et externes. Vous pouvez facilement adapter le contenu et les liens selon vos besoins.</p>
+        <div class="buttons">
+            <a href="#section2">Voir les fonctionnalités</a>
+            <a href="https://example.com" target="_blank">Site externe</a>
+        </div>
+    </section>
 
+    <section id="section2">
+        <h2>Fonctionnalités</h2>
+        <p>Notre produit offre des solutions simples et efficaces pour vos besoins. Vous pouvez cliquer sur les liens pour en savoir plus ou pour accéder à des ressources externes.</p>
+        <div class="buttons">
+            <a href="#section3">Contactez-nous</a>
+            <a href="https://example.com/features" target="_blank">Détails externes</a>
+        </div>
+    </section>
+
+    <section id="section3">
+        <h2>Contact</h2>
+        <p>Pour toute question, vous pouvez nous envoyer un message ou visiter notre site principal. Nous sommes là pour vous aider !</p>
+        <div class="buttons">
+            <a href="mailto:contact@example.com">Envoyer un email</a>
+            <a href="https://example.com/contact" target="_blank">Formulaire en ligne</a>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2025 Ma Landing Page. Tous droits réservés.</p>
+        <p>
+            <a href="https://example.com/privacy" target="_blank">Politique de confidentialité</a> |
+            <a href="https://example.com/terms" target="_blank">Conditions d'utilisation</a>
+        </p>
+    </footer>
+
+    <script src="/feedback-widget.js"></script>
+    <script>
+        FeedbackWidget.init();
+    </script>
 </body>
 </html>
