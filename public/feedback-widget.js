@@ -65,7 +65,8 @@
         const selector = getSelector(element);
         console.log('[FeedbackWidget] element selected:', selector);
 
-        alert('Élément sélectionné :\n' + selector);
+        showModal(selector);
+;
     }
 
     function onKeyDown(e) {
@@ -145,6 +146,101 @@
             createButton();
         }
         console.log('[FeedbackWidget] loaded');
+    }
+
+    /* ===========================
+    MODALE
+    =========================== */
+
+    function showModal(selector) {
+        // BACKDROP
+        const backdrop = document.createElement('div');
+        backdrop.style.position = 'fixed';
+        backdrop.style.top = '0';
+        backdrop.style.left = '0';
+        backdrop.style.width = '100vw';
+        backdrop.style.height = '100vh';
+        backdrop.style.background = 'rgba(0,0,0,0.4)';
+        backdrop.style.zIndex = '999998';
+        backdrop.style.display = 'flex';
+        backdrop.style.alignItems = 'center';
+        backdrop.style.justifyContent = 'center';
+
+        // MODAL BOX
+        const modal = document.createElement('div');
+        modal.style.background = '#fff';
+        modal.style.padding = '20px';
+        modal.style.borderRadius = '8px';
+        modal.style.width = '320px';
+        modal.style.boxShadow = '0 6px 20px rgba(0,0,0,.25)';
+        modal.style.fontFamily = 'Arial, sans-serif';
+        modal.style.display = 'flex';
+        modal.style.flexDirection = 'column';
+        modal.style.gap = '10px';
+
+        const title = document.createElement('h3');
+        title.innerText = 'Signaler un bug';
+        title.style.margin = '0';
+        modal.appendChild(title);
+
+        const textarea = document.createElement('textarea');
+        textarea.placeholder = 'Décrivez le problème...';
+        textarea.style.width = '100%';
+        textarea.style.height = '80px';
+        textarea.style.padding = '8px';
+        textarea.style.fontSize = '14px';
+        modal.appendChild(textarea);
+
+        const btnSend = document.createElement('button');
+        btnSend.innerText = 'Envoyer';
+        btnSend.style.background = '#38a169';
+        btnSend.style.color = '#fff';
+        btnSend.style.border = 'none';
+        btnSend.style.padding = '8px 12px';
+        btnSend.style.borderRadius = '4px';
+        btnSend.style.cursor = 'pointer';
+
+        const btnCancel = document.createElement('button');
+        btnCancel.innerText = 'Annuler';
+        btnCancel.style.background = '#e3342f';
+        btnCancel.style.color = '#fff';
+        btnCancel.style.border = 'none';
+        btnCancel.style.padding = '8px 12px';
+        btnCancel.style.borderRadius = '4px';
+        btnCancel.style.cursor = 'pointer';
+
+        const btnContainer = document.createElement('div');
+        btnContainer.style.display = 'flex';
+        btnContainer.style.justifyContent = 'flex-end';
+        btnContainer.style.gap = '10px';
+        btnContainer.appendChild(btnCancel);
+        btnContainer.appendChild(btnSend);
+
+        modal.appendChild(btnContainer);
+        backdrop.appendChild(modal);
+        document.body.appendChild(backdrop);
+
+        // ÉVÉNEMENTS
+        btnCancel.addEventListener('click', () => {
+            document.body.removeChild(backdrop);
+        });
+
+        btnSend.addEventListener('click', () => {
+            const message = textarea.value.trim();
+            if (!message) {
+                alert('Veuillez écrire un message.');
+                return;
+            }
+
+            console.log('[FeedbackWidget] feedback envoyé:', {
+                selector,
+                message
+            });
+
+            alert('Feedback envoyé !\n' + message);
+
+            document.body.removeChild(backdrop);
+        });
     }
 
     window.FeedbackWidget = { init };
